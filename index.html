@@ -5,6 +5,350 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Checkout page</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Space Grotesk:wght@500&display=swap"
+    />
+    <style>
+      :root {
+        --white: hsl(0, 0%, 100%);
+        --red: hsl(0, 100%, 66%);
+        --gray: hsl(279, 6%, 55%);
+        --light-gray: hsl(270, 3%, 87%);
+        --dark-violet: hsl(278, 68%, 11%);
+
+        --decoration-cl: var(--white);
+        --main-cl: var(--dark-violet);
+        --cta-cl: var(--white);
+        --error-cl: var(--red);
+
+        --caret-cl: var(--dark-violet);
+        --placeholder-cl: var(--light-gray);
+        --success-paragraph-cl: var(--gray);
+
+        --input-border-cl: var(--light-gray);
+        --input-focus-cl: linear-gradient(white, white),
+          linear-gradient(to right, hsl(249, 99%, 64%), hsl(278, 94%, 30%));
+
+        --main-bg: var(--white);
+        --cta-bg: var(--dark-violet);
+
+        --decoration-width: 33.5%;
+        --decoration-height: 240px;
+        --default-border-radius: 8px;
+      }
+
+      /* Reset */
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font: 500 18px/1 "Space Grotesk", sans-serif;
+      }
+      button,
+      input {
+        width: 100%;
+        outline: none;
+      }
+
+      /* Utilities */
+
+      .row {
+        display: flex;
+      }
+
+      .cta {
+        height: 53px;
+        border: none;
+        cursor: pointer;
+        color: var(--cta-cl);
+        background: var(--cta-bg);
+        border-radius: var(--default-border-radius);
+      }
+      .cta:is(:hover, :focus-visible) {
+        opacity: 0.9;
+      }
+
+      /* Page */
+
+      .container {
+        display: grid;
+        min-height: 100vh;
+        grid-template-columns: 1fr;
+        grid-template-rows: var(--decoration-height) 1fr;
+      }
+      @media screen and (min-width: 992px) {
+        .container {
+          grid-template-rows: 1fr;
+          grid-template-columns: var(--decoration-width) 1fr;
+        }
+      }
+
+      /*
+        [1] Decoration
+      */
+
+      .decoration {
+        color: var(--decoration-cl);
+        background-image: url(images/bg-main-mobile.png);
+      }
+      @media (max-width: 991px) {
+        .decoration {
+          overflow-x: clip;
+          padding-top: 32px;
+          justify-content: center;
+        }
+      }
+      @media (min-width: 992px) {
+        .decoration {
+          align-items: center;
+          padding-left: 39.95%;
+          background-image: url(images/bg-main-desktop.png);
+        }
+      }
+
+      .decoration__card {
+        width: 343px;
+        height: 251px;
+        display: grid;
+        position: relative;
+      }
+      @media (max-width: 374px) {
+        .decoration__card {
+          transform: scale(0.9);
+        }
+      }
+      @media (min-width: 992px) {
+        .decoration__card {
+          row-gap: 2.6vh;
+        }
+      }
+      @media (min-width: 1200px) {
+        .decoration__card {
+          transform: scale(1.4) translate(7%, -15%);
+        }
+        @media (min-height: 700px) {
+          .decoration__card {
+            transform: scale(1.56) translate(10%, -15%);
+          }
+        }
+      }
+
+      .decoration__card__side {
+        width: 286px;
+        height: 157px;
+        background-size: 100% 100%;
+      }
+      .decoration__card__side * {
+        font-size: 0.637rem;
+      }
+
+      .decoration__card__side.back {
+        background-image: url(images/bg-card-back.png);
+      }
+      .decoration__card__side.front {
+        display: grid;
+        padding: 18px 23px 23px 20px;
+        background-image: url(images/bg-card-front.png);
+      }
+      @media (max-width: 991px) {
+        .decoration__card__side.back {
+          justify-self: end;
+        }
+        .decoration__card__side.front {
+          bottom: 0;
+          position: absolute;
+        }
+      }
+      @media (min-width: 992px) {
+        .decoration__card__side.back {
+          left: 17.5%;
+          position: relative;
+        }
+        .decoration__card__side.front {
+          order: -1;
+          justify-self: end;
+        }
+      }
+
+      .decoration__card__logo {
+        top: -7px;
+        left: -13px;
+        position: relative;
+        transform: scale(0.65);
+      }
+      .decoration__card__info {
+        display: grid;
+        align-self: end;
+        row-gap: 20px;
+      }
+      .decoration__card__row {
+        justify-content: space-between;
+      }
+      .decoration__card__number {
+        font-size: 1.865em;
+      }
+      .decoration__card__name {
+        overflow: hidden;
+        max-width: 150px;
+      }
+      .decoration__card__cvc {
+        position: absolute;
+        z-index: 5;
+        display: block;
+        top: 72px;
+        right: 39px;
+      }
+
+      /*
+        [2] Main
+      */
+
+      .main {
+        display: grid;
+        place-items: center;
+        color: var(--main-cl);
+        background-color: var(--main-bg);
+      }
+      @media (max-width: 991px) {
+        .main {
+          padding-inline: 24px;
+          padding-bottom: 45px;
+        }
+      }
+
+      .main > *:not([hidden]) {
+        display: grid;
+      }
+      @media (min-width: 500px) {
+        main > * {
+          max-width: 381px;
+        }
+      }
+      @media (min-width: 992px) {
+        main > * {
+          margin-left: 13.27%;
+        }
+      }
+
+      /*
+        Form
+      */
+
+      .form {
+        row-gap: 22px;
+        margin-top: 92px;
+      }
+      .form__row {
+        column-gap: 11px;
+      }
+      @media (min-width: 992px) {
+        .form {
+          row-gap: 28px;
+          padding-top: 0;
+        }
+        .form__row {
+          column-gap: 20px;
+        }
+      }
+
+      /* Form Group */
+      .form__group {
+        display: grid;
+        row-gap: 11px;
+      }
+      .form__group.date {
+        column-gap: 8px;
+        grid-template-columns: 72px 72px;
+      }
+      @media (min-width: 500px) {
+        .form__group.date {
+          column-gap: 10px;
+          grid-template-columns: 80px 80px;
+        }
+      }
+
+      /* Form Group Label */
+      .form__group__label {
+        grid-column: 1/-1;
+        font-size: 0.65rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+
+      /* Form Group Control */
+      .form__group__control {
+        color: inherit;
+        padding: 10px 15px;
+        caret-color: var(--caret-cl);
+        background-origin: border-box;
+        border: 1px solid var(--input-border-cl);
+        background-clip: padding-box, border-box;
+        border-radius: var(--default-border-radius);
+        will-change: border-color, border-image, background-image;
+      }
+      .form__group :is(:focus) {
+        --input-border-cl: transparent;
+        background-image: var(--input-focus-cl);
+      }
+      .form__group__control.error:not(:focus) {
+        --input-border-cl: var(--error-cl);
+      }
+      .form__group__control ::placeholder {
+        white-space: inherit;
+        color: var(--placeholder-cl);
+      }
+
+      /* Form Group Alert */
+      .form__group__alert {
+        display: none;
+        font-size: 0.66rem;
+        color: var(--error-cl);
+      }
+      .form__group__control .error:not(:focus) ~ .form__group__alert {
+        display: block;
+      }
+
+      /* Form Submit */
+      .form__submit {
+        margin-top: 6px;
+      }
+      @media (min-width: 992px) {
+        .form__submit {
+          margin-top: 12px;
+        }
+      }
+
+      /*
+        Success
+      */
+
+      .success {
+        width: 100%;
+        text-align: center;
+        justify-items: center;
+      }
+      @media screen and (max-width: 991px) {
+        .success {
+          padding-top: 88px;
+        }
+      }
+      .success__title {
+        font-size: 1.54rem;
+        letter-spacing: 3px;
+        margin-block: 40px 23px;
+        text-transform: uppercase;
+      }
+      .success__paragraph {
+        color: var(--success-paragraph-cl);
+      }
+      .success__cta {
+        margin-top: 50px;
+      }
+    </style>
   </head>
   <body>
     <div class="container">
@@ -39,8 +383,9 @@
               <span class="decoration__card__number">1234 5678 9123 0000</span>
               <div class="decoration__card__row | row">
                 <span class="decoration__card__name">Jane Appleseed</span>
-                <div>
-                  <span class="decoration__card__month">MM</span>/
+                <div class="row">
+                  <span class="decoration__card__month">MM</span>
+                  /
                   <span class="decoration__card__year">YY</span>
                 </div>
               </div>
