@@ -244,6 +244,7 @@
       }
       .form__row {
         column-gap: 11px;
+        align-items: flex-start;
       }
       @media (min-width: 992px) {
         .form {
@@ -290,7 +291,7 @@
         border-radius: var(--default-border-radius);
         will-change: border-color, border-image, background-image;
       }
-      .form__group :is(:focus) {
+      .form__group__control:focus {
         --input-border-cl: transparent;
         background-image: var(--input-focus-cl);
       }
@@ -306,9 +307,10 @@
       .form__group__alert {
         display: none;
         font-size: 0.66rem;
+        white-space: nowrap;
         color: var(--error-cl);
       }
-      .form__group__control .error:not(:focus) ~ .form__group__alert {
+      .form__group__control.error:not(:focus) ~ .form__group__alert {
         display: block;
       }
 
@@ -430,8 +432,8 @@
               autocomplete="cc-number"
               title="Enter your card number"
               placeholder="e.g. 1234 5678 9123 0000"
-              minlength="16"
-              maxlength="16"
+              minlength="19"
+              maxlength="19"
               required
             />
             <span
@@ -491,8 +493,6 @@
                 title="Enter the three written numbers in the back of the card"
                 minlength="3"
                 maxlength="3"
-                min="100"
-                max="999"
                 required
               />
               <span
@@ -541,5 +541,110 @@
         </section>
       </main>
     </div>
+
+    <script>
+      /*
+        Helpers
+      */
+
+      const handleNumberInputs = (e) => {
+        if (e.key.length < 2 && isNaN(e.key) && !e.altKey && !e.ctrlKey)
+          e.preventDefault();
+      };
+
+      const addSpace = (e) => {
+        if (
+          !isNaN(e.key) &&
+          e.target.value.length &&
+          e.target.value.length < e.target.maxLength &&
+          e.target.value.replaceAll(" ", "").length % 4 === 0
+        ) {
+          e.target.value += " ";
+        }
+      };
+
+      const removeSpace = (e) => {
+        if (e.key === "Backspace") {
+          const index = e.target.selectionEnd;
+          const trimmedVal = e.target.value.replaceAll(" ", "");
+
+          e.target.value = trimmedVal
+            .replace(/\d{4}/g, ($) => $ + " ")
+            .trimEnd();
+          e.target.selectionEnd = index;
+        }
+      };
+
+      const isHasZero = (e) => e.target.value[0] === "0";
+      const addZero = (e) => (e.target.value = "0" + e.target.value);
+      const removeZero = (e) => {
+        e.target.value = isHasZero(e)
+          ? e.target.value.slice(1)
+          : e.target.value;
+      };
+
+      const handleZero = (e) => {
+        if (!e.target.selectionStart) e.target.value = "";
+        if (!e.target.value.length) {
+          !isNaN(e.key) && addZero(e);
+        } else {
+          if (e.key !== "Backspace") {
+            !isNaN(e.key) && removeZero(e);
+          } else {
+            isHasZero(e) ? (e.target.value = "") : addZero(e);
+          }
+        }
+      };
+
+      const updateDecorativeCard = ({ target: { id, value, placeholder } }) => {
+        document.querySelector(`.decoration__card__${id}`).innerHTML =
+          value || placeholder.replace("e.g. ", "");
+      };
+
+      const inputValidation = (input) => {
+        const { valueMissing, tooShort } = input.validity;
+        const isOutRange = input.max ? +input.max < +input.value : false;
+        const isUnderRange = input.min ? +input.min > +input.value : false;
+
+        if (valueMissing | tooShort | isOutRange | isUnderRange) {
+          const alertNode = input.parentElement.querySelector("[role=alert]");
+
+          input.classList.add("error");
+          if (valueMissing) alertNode.innerHTML = "Can't be blank";
+          if (tooShort | isOutRange | isUnderRange)
+            alertNode.innerHTML = "Wrong format";
+        } else {
+          input.classList.remove("error");
+        }
+      };
+
+      /*
+        Events
+      */
+
+      document.querySelectorAll(".form__group__control").forEach((ele) => {
+        ele.onkeydown = (e) => {
+          e.target.inputMode && handleNumberInputs(e);
+          e.target.id === "number" && addSpace(e);
+          e.target.id === "month" && handleZero(e);
+        };
+        ele.onkeyup = (e) => {
+          updateDecorativeCard(e);
+          e.target.id === "number" && removeSpace(e);
+        };
+        ele.oninput = (e) => inputValidation(e.target);
+      });
+
+      document.querySelector(".form").onsubmit = (e) => {
+        e.preventDefault();
+
+        if (e.target.checkValidity() && !e.target.querySelector(".error")) {
+          e.target.setAttribute("hidden", "");
+          e.target.nextElementSibling.removeAttribute("hidden");
+        } else {
+          [...e.target.elements].forEach((ele) => inputValidation(ele));
+        }
+      };
+    </script>
   </body>
 </html>
