@@ -72,6 +72,31 @@
         opacity: 0.9;
       }
 
+      .loader {
+        display: inline-block;
+        width: 80px;
+        height: 80px;
+      }
+      .loader:after {
+        content: "";
+        margin: 8px;
+        width: 64px;
+        height: 64px;
+        display: block;
+        border: 6px solid;
+        border-radius: 50%;
+        animation: loader 1.2s linear infinite;
+        border-color: var(--main-cl) transparent var(--main-cl) transparent;
+      }
+      @keyframes loader {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
       /* Page */
 
       .container {
@@ -618,6 +643,13 @@
         }
       };
 
+      const loading = () => {
+        const loader = document.createElement("div");
+        loader.className = "loader";
+        loader.ariaLabel = "Loading";
+        document.querySelector(".main").appendChild(loader);
+      };
+
       /*
         Events
       */
@@ -640,7 +672,11 @@
 
         if (e.target.checkValidity() && !e.target.querySelector(".error")) {
           e.target.setAttribute("hidden", "");
-          e.target.nextElementSibling.removeAttribute("hidden");
+          loading();
+          setTimeout(() => {
+            document.querySelector(".loader").remove();
+            e.target.nextElementSibling.removeAttribute("hidden");
+          }, 1500);
         } else {
           [...e.target.elements].forEach((ele) => inputValidation(ele));
         }
