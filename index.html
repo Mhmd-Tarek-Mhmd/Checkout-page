@@ -385,8 +385,11 @@
     </style>
   </head>
   <body>
-    <h1 class="sr-only">Interactive card details form</h1>
     <div class="container">
+      <h1 class="sr-only">Interactive card details form</h1>
+      <!--
+        Decoration
+      -->
       <div aria-hidden="true" class="decoration | row">
         <div class="decoration__card">
           <div class="decoration__card__side back">
@@ -478,7 +481,7 @@
 
           <div class="form__row | row">
             <!-- Exp. Date -->
-            <label class="form__group date">
+            <div class="form__group date">
               <strong class="form__group__label">Exp. Date (MM/YY)</strong>
               <input
                 id="month"
@@ -488,6 +491,7 @@
                 autocomplete="cc-exp-month"
                 placeholder="MM"
                 title="Enter expiration month"
+                aria-label="Enter expiration month"
                 minlength="1"
                 maxlength="2"
                 data-min="1"
@@ -501,6 +505,7 @@
                 inputmode="numeric"
                 autocomplete="cc-exp-year"
                 title="Enter expiration year"
+                aria-label="Enter expiration year"
                 placeholder="YY"
                 minlength="2"
                 maxlength="2"
@@ -511,7 +516,7 @@
                 aria-live="assertive"
                 class="form__group__alert"
               ></span>
-            </label>
+            </div>
 
             <!-- CVC -->
             <label class="form__group">
@@ -636,8 +641,12 @@
 
       const inputValidation = (input) => {
         const { valueMissing, tooShort } = input.validity;
-        const isOutRange = input.dataset.max ? +input.dataset.max < +input.value : false;
-        const isUnderRange = input.dataset.min ? +input.dataset.min > +input.value : false;
+        const isOutRange = input.dataset.max
+          ? +input.dataset.max < +input.value
+          : false;
+        const isUnderRange = input.dataset.min
+          ? +input.dataset.min > +input.value
+          : false;
 
         if (valueMissing | tooShort | isOutRange | isUnderRange) {
           const alertNode = input.parentElement.querySelector("[role=alert]");
