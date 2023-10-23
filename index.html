@@ -60,6 +60,13 @@
         display: flex;
       }
 
+      .sr-only {
+        width: 1px;
+        height: 1px;
+        position: absolute;
+        clip: rect(0 0 0 0);
+      }
+
       .cta {
         height: 53px;
         border: none;
@@ -274,7 +281,7 @@
       @media (min-width: 992px) {
         .form {
           row-gap: 28px;
-          padding-top: 0;
+          margin-top: 0;
         }
         .form__row {
           column-gap: 20px;
@@ -378,6 +385,7 @@
     </style>
   </head>
   <body>
+    <h1 class="sr-only">Interactive card details form</h1>
     <div class="container">
       <div aria-hidden="true" class="decoration | row">
         <div class="decoration__card">
@@ -482,8 +490,8 @@
                 title="Enter expiration month"
                 minlength="1"
                 maxlength="2"
-                min="1"
-                max="12"
+                data-min="1"
+                data-max="12"
                 required
               />
               <input
@@ -555,7 +563,7 @@
                 y2="91.507"
                 gradientUnits="userSpaceOnUse"
               >
-                <stop stop-color="#6348FE" />
+                <stop offset="0" stop-color="#6348FE" />
                 <stop offset="1" stop-color="#610595" />
               </linearGradient>
             </defs>
@@ -628,8 +636,8 @@
 
       const inputValidation = (input) => {
         const { valueMissing, tooShort } = input.validity;
-        const isOutRange = input.max ? +input.max < +input.value : false;
-        const isUnderRange = input.min ? +input.min > +input.value : false;
+        const isOutRange = input.dataset.max ? +input.dataset.max < +input.value : false;
+        const isUnderRange = input.dataset.min ? +input.dataset.min > +input.value : false;
 
         if (valueMissing | tooShort | isOutRange | isUnderRange) {
           const alertNode = input.parentElement.querySelector("[role=alert]");
