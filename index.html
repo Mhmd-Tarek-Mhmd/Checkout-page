@@ -256,12 +256,12 @@
         display: grid;
       }
       @media (min-width: 500px) {
-        main > * {
+        .main > * {
           max-width: 381px;
         }
       }
       @media (min-width: 992px) {
-        main > * {
+        .main > * {
           margin-left: 13.27%;
         }
       }
@@ -385,7 +385,7 @@
     </style>
   </head>
   <body>
-    <div class="container">
+    <main class="container">
       <h1 class="sr-only">Interactive card details form</h1>
       <!--
         Decoration
@@ -432,7 +432,7 @@
         </div>
       </div>
 
-      <main class="main">
+      <div class="main">
         <!--
           Form
         -->
@@ -577,8 +577,8 @@
           <p class="success__paragraph">We've added your card details</p>
           <button class="success__cta | cta">Continue</button>
         </section>
-      </main>
-    </div>
+      </div>
+    </main>
 
     <script>
       /*
